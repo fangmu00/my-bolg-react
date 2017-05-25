@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Layout, Menu, Icon } from 'antd';
 import { BrowserRouter, Route, Router, NavLink } from 'react-router-dom';
-import ArticleList from './Article/ArticleList';
+import ArticleList from './Article/ArticleList/index';
 import Home from './Home';
 
 const { Header, Content, Footer, Sider } = Layout;
