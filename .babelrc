@@ -1,0 +1,15 @@
+{
+  "presets": [
+    ["es2015", {"modules": false}],
+    // webpack现在已经支持原生的import语句了, 并且将其运用在tree-shaking特性上
+
+    "react"
+    // 转译React组件为JS代码
+  ],
+  "plugins": [
+    "react-hot-loader/babel",
+    // 开启react代码的模块热替换（HMR）
+    ["import", { "libraryName": "antd", "style": "css" }]
+    // antd按需加载配置
+  ]
+}

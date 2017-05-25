@@ -1,0 +1,26 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "react/jsx-no-bind": 0,
+    "react/sort-comp": 0,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/no-render-return-value": 0,
+    "react/no-string-refs": 0,
+    "no-prototype-builtins": 0,
+    "no-global-assign": 0,
+    "no-unsafe-negation": 0,
+    "no-param-reassign": 0,
+    "comma-dangle": [2, "never"],
+    "no-shadow": 0
+  },
+  "plugins": [
+    "react"
+  ],
+  "globals": {
+    "define": true
+  }
+}
