@@ -11,7 +11,6 @@ const BreadNav = ({ config }) => {
       </Breadcrumb>
     )
 }
-
 BreadNav.propTypes = { config: React.PropTypes.array };
 BreadNav.defaultProps = { config: [] };
 

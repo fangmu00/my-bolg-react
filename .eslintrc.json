@@ -1,3 +1,4 @@
+// https://github.com/yannickcr/eslint-plugin-react
 {
   "parser": "babel-eslint",
   "env": {
@@ -6,7 +7,15 @@
   },
   "rules": {
     "react/jsx-no-bind": 0,
-    "react/sort-comp": 0,
+    "react/sort-comp": [1, {
+      "order": [
+        "static-methods",
+        "lifecycle",
+        "/^on.+$/",
+        "everything-else",
+        "render"
+      ]
+    }],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/no-render-return-value": 0,
     "react/no-string-refs": 0,
@@ -15,7 +24,29 @@
     "no-unsafe-negation": 0,
     "no-param-reassign": 0,
     "comma-dangle": [2, "never"],
-    "no-shadow": 0
+    "no-shadow": 0,
+    "no-console": 1,
+    "no-alert": 1,
+    "no-debugger": 1,
+    "object-curly-spacing": [2, "always"],
+    "react/no-did-mount-set-state": 1,
+    "react/no-did-update-set-state": 1,
+    "react/no-direct-mutation-state": 1,
+    "react/no-will-update-set-state": 1,
+    "react/no-set-state": 1,
+    "react/no-unknown-property": 2,
+    "react/no-danger": 1,
+    "react/no-unused-prop-types": 1,
+    "react/prefer-es6-class": [2, "always"],
+    "react/prefer-stateless-function": 2,
+    "react/prop-types": [1, { "ignore": [], "customValidators": [] }],
+    "react/react-in-jsx-scope": 2,
+    "react/require-render-return": 2,
+    "react/self-closing-comp": 2,
+    "react/style-prop-object": 2,
+    "react/jsx-boolean-value": [1,"never"],
+    "react/jsx-closing-bracket-location": 1,
+    "react/jsx-first-prop-new-line": ["error", "multiline"]
   },
   "plugins": [
     "react"

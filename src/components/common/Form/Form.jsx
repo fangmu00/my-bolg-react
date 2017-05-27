@@ -133,6 +133,7 @@ class Form2 extends React.Component {
         <Row type="flex" gutter={48}>
           {children}
         </Row>
+
       </Form>
     );
   }
