@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Table, Button  } from 'antd';
 import BreadNav from '../../common/BreadNav';
-import Search from './Search'
+import Form from '../../common/Form/index';
+import Search from './Search';
 
 class ArticleList extends React.Component {
     constructor(props) {
@@ -56,7 +57,7 @@ class ArticleList extends React.Component {
           <div>
               <BreadNav config={this.BreadNav}/>
               <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                  <Search />
+                  <Form />
                   <div style={{ paddingBottom: '20px' }}>
                     <Button>新增文章</Button>
                   </div>
