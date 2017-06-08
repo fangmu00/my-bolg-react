@@ -14,20 +14,20 @@ class Form2 extends React.Component {
     config: {
       fields: [
         ['Input1', 'Input2', ''],
-        ['Input3', '', ''],
+        ['Select', '', ''],
         ['SUBMIT', 'RESET']
       ],
       labels: {
         Input1: '测试input1[我是placeholder]',
         Input2: '测试input2[我是placeholder]',
-        Input3: '测试input3[我是placeholder]',
+        Select: '测试Select[我是placeholder]',
         SUBMIT: '查询',
         RESET: '清空'
       },
       types: {
         Input1: 'Input',
         Input2: 'Input',
-        Input3: 'Input'
+        Select: 'Select'
       },
       props: {
         Input1: {
@@ -35,6 +35,15 @@ class Form2 extends React.Component {
         },
         Input2: {
           readOnly: true
+        },
+        Select: {
+          required: true
+        }
+      },
+      options: {
+        Select: {
+          'key1': 'value1',
+          'key2': 'value2'
         }
       }
     },
@@ -75,7 +84,7 @@ class Form2 extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { config } = this.props;
-    const { fields, labels, types, props } = config;
+    const { fields, labels, types, props, options } = config;
     const formItemLayout = {
       labelCol: { span: 5 },
       wrapperCol: { span: 19 }
@@ -102,18 +111,25 @@ class Form2 extends React.Component {
               </Col>
             );
           } else {
-            const Type = formFields[types[inItem]];
+            const Type = types[inItem];
+            const Copt = formFields[types[inItem]];
+            let itemOption = {};
             let required = false;
+            if (Type === 'Select') {
+              if (options[inItem]) {
+                itemOption = { option: options[inItem] }
+              }
+            }
             if (props[inItem] && props[inItem].required) {
               required = true;
             }
             children.push(
               <Col span={span} key={key}>
-                <FormItem {...formItemLayout} label={labelObj.label}>
+                <FormItem {...formItemLayout} label={labelObj.label} hasFeedback>
                   {getFieldDecorator(inItem, {
                       rules: [{ required: required, message: '该项必填!' }]
                     })(
-                      <Type placeholder={placeholder ? placeholder : ''} />
+                      <Copt placeholder={placeholder ? placeholder : ''} {...itemOption} />
                   )}
                 </FormItem>
               </Col>
