@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Form, Button, Row, Col, Input } from 'antd';
+import { Form, Button, Row, Col } from 'antd';
 import formFields from '../FormFields/index';
 
 const FormItem = Form.Item;
@@ -113,7 +113,7 @@ class Form2 extends React.Component {
                   {getFieldDecorator(inItem, {
                       rules: [{ required: required, message: '该项必填!' }]
                     })(
-                    <Type placeholder={placeholder ? placeholder : ''} />
+                      <Type placeholder={placeholder ? placeholder : ''} />
                   )}
                 </FormItem>
               </Col>

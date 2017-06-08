@@ -2,8 +2,17 @@
 {
   "parser": "babel-eslint",
   "env": {
+    "es6": true,
     "browser": true,
     "node": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "ecmaFeatures": {
+    "jsx": true
   },
   "rules": {
     "react/jsx-no-bind": 0,
@@ -27,7 +36,9 @@
     "no-shadow": 0,
     "no-console": 1,
     "no-alert": 1,
+    "no-undef": 2,
     "no-debugger": 1,
+    "no-unused-vars": 2,
     "object-curly-spacing": [2, "always"],
     "react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,
@@ -44,9 +55,24 @@
     "react/require-render-return": 2,
     "react/self-closing-comp": 2,
     "react/style-prop-object": 2,
-    "react/jsx-boolean-value": [1,"never"],
+    "react/jsx-boolean-value": [1, "never"],
     "react/jsx-closing-bracket-location": 1,
-    "react/jsx-first-prop-new-line": ["error", "multiline"]
+    "react/jsx-first-prop-new-line": [2, "multiline"],
+    "react/jsx-indent": [1, 2],
+    "react/jsx-indent-props": [1, 2],
+    "react/jsx-key": 1,
+    "react/jsx-no-duplicate-props": 1,
+    "react/jsx-no-literals": 1,
+    "react/jsx-no-target-blank": 2,
+    "react/jsx-pascal-case": 2,
+    "react/jsx-tag-spacing":[1, {
+      "closingSlash": "never",
+      "beforeSelfClosing": "always",
+      "afterOpening": "never"
+    }],
+    "react/jsx-space-before-closing": [1, "always"],
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2
   },
   "plugins": [
     "react"

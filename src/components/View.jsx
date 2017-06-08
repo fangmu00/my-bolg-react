@@ -1,12 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Layout, Menu, Icon } from 'antd';
-import { BrowserRouter, Route, Router, NavLink } from 'react-router-dom';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import ArticleList from './Article/ArticleList/index';
+import ArticleAddorEdit from './Article/ArticleAddorEdit';
 import Home from './Home';
 
-const { Header, Content, Footer, Sider } = Layout;
-const SubMenu = Menu.SubMenu;
+const { Header, Sider } = Layout;
 
 class View extends React.Component {
   constructor(props) {
@@ -62,8 +61,9 @@ class View extends React.Component {
               </Menu>
             </Sider>
             <Layout style={{ padding: '0 24px 24px' }}>
-              <Route exact path="/" component={Home}/>
-              <Route path="/ArticleList" component={ArticleList}/>
+              <Route exact path="/" component={Home}  />
+              <Route path="/ArticleList" component={ArticleList}  />
+              <Route path="/ArticleAddorEdit" component={ArticleAddorEdit}  />
             </Layout>
           </Layout>
         </Layout>

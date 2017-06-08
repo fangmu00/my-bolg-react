@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --history-api-fallback",
-    "build": "webpack -p --progress --colors"
+    "start": "webpack-dev-server --env=dev --history-api-fallback",
+    "build": "webpack --env=prod --progress --profile --colors --optimize-minimize"
   },
   "repository": {
     "type": "git",

@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Table, Button  } from 'antd';
+import { Link } from 'react-router-dom';
 import BreadNav from '../../common/BreadNav';
 import Form from '../../common/Form/index';
-import Search from './Search';
 
 class ArticleList extends React.Component {
     constructor(props) {
@@ -55,14 +54,16 @@ class ArticleList extends React.Component {
         };
         return (
           <div>
-              <BreadNav config={this.BreadNav}/>
-              <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                  <Form />
-                  <div style={{ paddingBottom: '20px' }}>
-                    <Button>新增文章</Button>
-                  </div>
-                  <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+            <BreadNav config={this.BreadNav}  />
+            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+              <Form  />
+              <div style={{ paddingBottom: '20px' }}>
+                <Link to="/ArticleAddorEdit">
+                  <Button>新增文章</Button>
+                </Link>
               </div>
+              <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+            </div>
           </div>
         )
     }
