@@ -7,7 +7,12 @@ import Form from '../../common/Form/index';
 class ArticleList extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+          formData: {
+            Input1: 'input111111',
+            Select: ['key1','key2']
+          }
+        };
         this.initConfig();
     }
 
@@ -56,7 +61,11 @@ class ArticleList extends React.Component {
           <div>
             <BreadNav config={this.BreadNav}  />
             <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-              <Form  />
+              <Form
+                onSubmit={(v) => { console.log(v) }}
+                data={this.state.formData}
+                onChange={(v) => { this.setState( { formData: { 'Input1': Math.random() } }) }}
+              />
               <div style={{ paddingBottom: '20px' }}>
                 <Link to="/ArticleAddorEdit">
                   <Button>新增文章</Button>
@@ -70,3 +79,4 @@ class ArticleList extends React.Component {
 }
 
 export default ArticleList;
+// this.form.setFieldsValue({ 'input1': Math.randan() })

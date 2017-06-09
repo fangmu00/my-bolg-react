@@ -6,10 +6,12 @@ const { Option } = Select;
 
 class Select2 extends React.Component {
   static defaultProps = {
-    option: [{ key: 'test', value: 'TEST' }]
+    option: [{ key: 'test', value: 'TEST' }],
+    onChange: () => {}
   }
 
   static propTypes = {
+    onChange: PropTypes.func,
     option: PropTypes.objectOf(PropTypes.any)
   }
 

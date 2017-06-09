@@ -6,8 +6,10 @@ const FormItem = Form.Item;
 class Form2 extends React.Component {
   static propTypes = {
     config: PropTypes.objectOf(PropTypes.any),
+    data: PropTypes.objectOf(PropTypes.any),
     onChange: PropTypes.func,
-    onSubmit: PropTypes.func
+    onSubmit: PropTypes.func,
+    form: PropTypes.objectOf(PropTypes.any)
   }
 
   static defaultProps = {
@@ -15,7 +17,7 @@ class Form2 extends React.Component {
       fields: [
         ['Input1', 'Input2', ''],
         ['Select', '', ''],
-        ['SUBMIT', 'RESET']
+        ['SUBMIT']
       ],
       labels: {
         Input1: '测试input1[我是placeholder]',
@@ -37,7 +39,8 @@ class Form2 extends React.Component {
           readOnly: true
         },
         Select: {
-          required: true
+          required: false,
+          mode:"multiple"
         }
       },
       options: {
@@ -47,14 +50,27 @@ class Form2 extends React.Component {
         }
       }
     },
+    data: {
+      "Input2": "Input2",
+      "Select": 'key1'
+    },
     onChange: () => {},
-    onSubmit: () => {}
+    onSubmit: () => {},
+    form: null
   }
 
   constructor(props) {
     super(props);
     this.status = {};
   }
+
+  // componentDidMount() {
+  //   const { data } = this.props;
+  //   if (data) {
+  //     this.props.form.setFieldsValue(data);
+  //   }
+  // }
+
 
   handleReset() {
     this.props.form.resetFields();
@@ -63,8 +79,19 @@ class Form2 extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      console.log('Received values of form: ', values);
+      console.log('Received values of form: ', values, err);
+      if (!err) {
+        this.props.onSubmit(values);
+      }
     });
+  }
+
+  handleChange(value, targetId) {
+    const values = this.props.form.getFieldsValue();
+    values[targetId] = value;
+    console.log(value, targetId, values)
+
+    this.props.onChange(values, targetId, values);
   }
 
   getLabelAandPlaceholder(text){
@@ -127,9 +154,10 @@ class Form2 extends React.Component {
               <Col span={span} key={key}>
                 <FormItem {...formItemLayout} label={labelObj.label} hasFeedback>
                   {getFieldDecorator(inItem, {
-                      rules: [{ required: required, message: '该项必填!' }]
+                      rules: [{ required: required, message: '该项必填!' }],
+                      onChange: (value) => { this.handleChange(value, inItem) }
                     })(
-                      <Copt placeholder={placeholder ? placeholder : ''} {...itemOption} />
+                      <Copt placeholder={placeholder ? placeholder : ''} {...itemOption} {...props[inItem]} />
                   )}
                 </FormItem>
               </Col>
@@ -155,4 +183,15 @@ class Form2 extends React.Component {
   }
 }
 
-export default Form.create()(Form2);
+export default Form.create({
+  mapPropsToFields(props) {
+    if (props.data) {
+      Object.keys(props.data).forEach((item) => {
+        props.data[item] = {
+          value: props.data[item]
+        }
+      })
+    }
+    return props.data ? props.data : {}
+  }
+})(Form2);
