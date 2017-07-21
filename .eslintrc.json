@@ -11,9 +11,6 @@
       "jsx": true
     }
   },
-  "ecmaFeatures": {
-    "jsx": true
-  },
   "rules": {
     "react/jsx-no-bind": 0,
     "react/sort-comp": [1, {

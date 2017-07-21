@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';// AppContainer 是一个 HMR 必须的包裹(wrapper)组件
 import View from '../components/View';
 
-import './app.css';
+import './app.less';
 
 const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
-      <Component/>
+      <Component />
     </AppContainer>,
     document.getElementById('App')
   );

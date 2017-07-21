@@ -64,7 +64,6 @@ class ArticleList extends React.Component {
               <Form
                 onSubmit={(v) => { console.log(v) }}
                 data={this.state.formData}
-                onChange={(v) => { this.setState( { formData: { 'Input1': Math.random() } }) }}
               />
               <div style={{ paddingBottom: '20px' }}>
                 <Link to="/ArticleAddorEdit">
