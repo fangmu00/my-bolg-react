@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Form, Button, Row, Col } from 'antd';
 import formFields from '../FormFields/index';
+import { deepCopy } from '../Utils/index';
 
 const FormItem = Form.Item;
 class Form2 extends React.Component {
@@ -63,14 +64,6 @@ class Form2 extends React.Component {
     super(props);
     this.status = {};
   }
-
-  // componentDidMount() {
-  //   const { data } = this.props;
-  //   if (data) {
-  //     this.props.form.setFieldsValue(data);
-  //   }
-  // }
-
 
   handleReset() {
     this.props.form.resetFields();
@@ -154,10 +147,10 @@ class Form2 extends React.Component {
               <Col span={span} key={key}>
                 <FormItem {...formItemLayout} label={labelObj.label} hasFeedback>
                   {getFieldDecorator(inItem, {
-                      rules: [{ required: required, message: '该项必填!' }],
-                      onChange: (value) => { this.handleChange(value, inItem) }
-                    })(
-                      <Copt placeholder={placeholder ? placeholder : ''} {...itemOption} {...props[inItem]} />
+                    rules: [{ required: required, message: '该项必填!' }],
+                    onChange: (value) => { this.handleChange(value, inItem) }
+                  })(
+                    <Copt placeholder={placeholder ? placeholder : ''} {...itemOption} {...props[inItem]} />
                   )}
                 </FormItem>
               </Col>
@@ -185,13 +178,15 @@ class Form2 extends React.Component {
 
 export default Form.create({
   mapPropsToFields(props) {
+    let data = {};
     if (props.data) {
-      Object.keys(props.data).forEach((item) => {
-        props.data[item] = {
-          value: props.data[item]
+      data = deepCopy(props.data);
+      Object.keys(data).forEach((item) => {
+        data[item] = {
+          value: data[item]
         }
       })
     }
-    return props.data ? props.data : {}
+    return data
   }
 })(Form2);
