@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './Login';
 import View from './View';
 
@@ -13,10 +13,10 @@ class Index extends React.Component {
   render() {
     return (
       <BrowserRouter>
-        <div>
+        <Switch>
           <Route path="/Login" component={Login}  />
-          <Route exact path="/" component={View}  />
-        </div>
+          <Route path="/" component={View}  />
+        </Switch>
 
       </BrowserRouter>
     )

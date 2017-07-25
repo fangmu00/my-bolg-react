@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Icon } from 'antd';
-import { BrowserRouter, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, NavLink } from 'react-router-dom';
 import ArticleList from './Article/ArticleList/index';
 import ArticleAddorEdit from './Article/ArticleAddorEdit';
 import Home from './Home';
@@ -78,9 +78,11 @@ class View extends React.Component {
               </Menu>
             </Sider>
             <Layout style={{ padding: '0 24px 24px' }}>
-              <Route exact path="/" component={Home}  />
-              <Route path="/ArticleList" component={ArticleList}  />
-              <Route path="/ArticleAddorEdit" component={ArticleAddorEdit}  />
+              <Switch>
+                <Route exact path="/" component={Home}  />
+                <Route path="/ArticleList" component={ArticleList}  />
+                <Route path="/ArticleAddorEdit" component={ArticleAddorEdit}  />
+              </Switch>
             </Layout>
           </Layout>
         </Layout>
