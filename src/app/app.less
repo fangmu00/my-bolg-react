@@ -1,5 +1,8 @@
 #App {
   height: 100%;
+  .login-form {
+    max-width: 300px;
+  }
   .logo {
     width: 120px;
     height: 31px;
@@ -11,14 +14,17 @@
     text-align: center;
     color: #fff;
   }
-  .ant-form-item-label{
-    width: 88px;
-    position: absolute;
+  .ant-form-horizontal{
+    .ant-form-item-label{
+      width: 88px;
+      position: absolute;
+    }
+    .ant-form-item-control-wrapper{
+      padding-left: 88px;
+      width: 100%;
+    }
   }
-  .ant-form-item-control-wrapper{
-    padding-left: 88px;
-    width: 100%;
-  }
+
   .btn-father{
     text-align: center;
     .ant-btn{

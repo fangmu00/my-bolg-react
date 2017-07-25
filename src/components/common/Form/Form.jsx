@@ -166,7 +166,6 @@ class Form2 extends React.Component {
     });
     return (
       <Form
-        className="ant-advanced-search-form"
         onSubmit={this.handleSubmit.bind(this)}
       >
         <Row type="flex" gutter={48}>

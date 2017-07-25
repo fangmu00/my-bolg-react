@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Icon } from 'antd';
-import { Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import ArticleList from './Article/ArticleList/index';
 import ArticleAddorEdit from './Article/ArticleAddorEdit';
 import Home from './Home';
@@ -17,7 +17,7 @@ class View extends React.Component {
 
   render() {
     return (
-      <div>
+      <BrowserRouter>
         <Layout style={{ height: '100vh' }}>
           <Header className="header">
             <div className="logo">
@@ -84,7 +84,7 @@ class View extends React.Component {
             </Layout>
           </Layout>
         </Layout>
-      </div>
+      </BrowserRouter>
     )
   }
 }
