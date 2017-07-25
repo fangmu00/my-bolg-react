@@ -104,7 +104,9 @@ class Form2 extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { config } = this.props;
-    const { fields, labels, types, props, options } = config;
+    const { fields, labels, types, options } = config;
+    let { props } = config;
+    props = props? props : {};
     const formItemLayout = {
       labelCol: { span: 5 },
       wrapperCol: { span: 19 }

@@ -1,70 +1,66 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Form, Row, Col, Input, Button, Icon } from 'antd';
-
-const FormItem = Form.Item;
+import Form from '../../common/Form/index';
 
 class Search extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { expand: false };
-    }
-
-  handleSearch(e) {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      console.log('Received values of form: ', values);
-    });
-  }
-
-  handleReset() {
-    this.props.form.resetFields();
-  }
-
-  toggle() {
-    const { expand } = this.state;
-    this.setState({ expand: !expand });
+  constructor(props) {
+    super(props);
+    this.state = {
+      formData: null,
+      formConfig: {
+        fields: [
+          ['Name', 'Type', 'Date', 'Status'],
+          ['SUBMIT']
+        ],
+        labels: {
+          Name: '标题[请输入]',
+          Type: '分类[请选择]',
+          Date: '日期[请选择]',
+          Status: '状态[请选择]',
+          SUBMIT: '查询'
+        },
+        types: {
+          Name: 'Input',
+          Type: 'Select',
+          Date: 'DatePicker',
+          Status: 'Select'
+        },
+        props: {
+          Date: {
+            type: 'Range',
+            placeholder: ['开始时间', '结束时间']
+          },
+          Type: {
+            allowClear: true
+          },
+          Status: {
+            allowClear: true
+          }
+        },
+        options: {
+          Type: {
+            js: 'js',
+            css: 'css'
+          },
+          Status: {
+            released: '已发布',
+            draft: '草稿'
+          }
+        }
+      }
+    };
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: { span: 5 },
-      wrapperCol: { span: 19 }
-    };
-
-    // To generate mock Form.Item
-    const children = [];
-    for (let i = 0; i < 3; i++) {
-      children.push(
-        <Col span={8} key={i}>
-          <FormItem {...formItemLayout} label={`Field ${i}`}>
-            {getFieldDecorator(`field-${i}`)(
-              <Input placeholder="placeholder" />
-            )}
-          </FormItem>
-        </Col>
-      );
-    }
-
-    const expand = this.state.expand;
-    const shownCount = expand ? children.length : 6;
+    const { formConfig } = this.state;
     return (
       <Form
-        className="ant-advanced-search-form"
-        onSubmit={this.handleSearch}
-      >
-        <Row gutter={48}>
-          {children.slice(0, shownCount)}
-        </Row>
-        <Row>
-          <Col span={24} style={{ textAlign: 'center' }}>
-            <Button type="primary" htmlType="submit">Search</Button>
-          </Col>
-        </Row>
-      </Form>
-    );
+        config={ formConfig }
+        onSubmit= {(data) => {
+          console.log(data)
+        }}
+      />
+    )
   }
 }
 
-export default Form.create()(Search);
+export default Search

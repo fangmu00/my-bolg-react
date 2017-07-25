@@ -67,6 +67,7 @@ class ArticleAddorEdit extends React.Component {
           />
           <div className={'btn-father text-left'}>
             <Button type="primary">{'提交'}</Button>
+            <Button>{'暂存'}</Button>
             <Button>{'返回'}</Button>
           </div>
         </div>
