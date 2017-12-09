@@ -24,7 +24,7 @@ class View extends React.Component {
                 '我的博客'
               }
           </div>
-          <Menu
+          {/* <Menu
             theme="dark"
             mode="horizontal"
             style={{ lineHeight: '64px', display: 'inline-block' }}
@@ -36,7 +36,7 @@ class View extends React.Component {
             </Menu.Item>
             <Menu.Item key="2">nav 2</Menu.Item>
             <Menu.Item key="3">nav 3</Menu.Item>
-          </Menu>
+          </Menu> */}
           <Menu
             theme="dark"
             mode="horizontal"

@@ -86,5 +86,5 @@ module.exports = {
     }), // html模板
     new webpack.HotModuleReplacementPlugin(), // 增加：webpack热替换插件
   ],
-  devtool: 'cheap-module-source-map',
+  devtool: 'inline-source-map',
 };
