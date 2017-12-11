@@ -33,3 +33,7 @@ export const getCookie = (name) => {
   return null;
 };
 
+export const clearCooklie = (name) => {
+  setCookie(name, '', -1);
+};
+

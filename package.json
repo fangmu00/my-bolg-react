@@ -20,8 +20,12 @@
   "homepage": "https://github.com/fangmu00/my-bolg-react#readme",
   "dependencies": {
     "antd": "^2.10.1",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
     "handlebars": "^4.0.8",
     "moment": "^2.18.1",
+    "mongoose": "^4.13.6",
     "prop-types": "^15.6.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-const userInfo = (state = { userName: '', password: '' }, action) => {
+const userInfo = (state, action) => {
   switch (action.type) {
     case 'login.submit':
       return action.payload;
