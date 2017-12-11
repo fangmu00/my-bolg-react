@@ -1,4 +1,11 @@
 import { createStore } from 'redux';
 import reducer from '../reducers';
 
-export default createStore(reducer);
+const defaultState = {
+  userInfo: {
+    username: '',
+    password: '',
+  },
+};
+
+export default createStore(reducer, defaultState);

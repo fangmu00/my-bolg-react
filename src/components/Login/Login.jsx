@@ -36,7 +36,7 @@ class NormalLoginForm extends React.Component {
             }
           </h1>
           <FormItem>
-            {getFieldDecorator('userName', {
+            {getFieldDecorator('username', {
               rules: [{ required: true, message: '请输入用户名!' }],
             })(<Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="用户名" />)}
           </FormItem>
