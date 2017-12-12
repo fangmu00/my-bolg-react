@@ -7,7 +7,7 @@ import store from '../store';
 
 import './app.less';
 
-/* global document */
+/* global document *//* global document */
 
 const render = (Component) => {
   ReactDOM.render(

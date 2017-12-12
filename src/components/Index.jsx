@@ -45,7 +45,7 @@ Index.propTypes = {
 };
 
 const mapStateToProps = ({ userInfo }) => ({
-  isLogin: !!(userInfo.password && userInfo.username),
+  isLogin: !!(userInfo.username),
 });
 
 export default connect(mapStateToProps)(Index);

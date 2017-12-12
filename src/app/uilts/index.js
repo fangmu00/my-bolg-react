@@ -1,6 +1,5 @@
-// 读取localStorage
-
 /* global window document */
+// 读取localStorage
 export const getLocalStorage = (name) => {
   if (window.localStorage) {
     return window.localStorage[name];
@@ -21,7 +20,7 @@ export const setLocalStorage = (key, value) => {
 export const setCookie = (key, value, days = 30) => {
   const exp = new Date();
   exp.setDate(exp + (days * 24 * 60 * 60 * 1000));
-  window.cookie = `${key}=${encodeURI(value)};expires=${exp.toGMTString()}`;
+  document.cookie = `${key}=${encodeURI(value)};expires=${exp.toGMTString()}`;
 };
 
 export const getCookie = (name) => {
@@ -33,7 +32,7 @@ export const getCookie = (name) => {
   return null;
 };
 
-export const clearCooklie = (name) => {
+export const clearCookie = (name) => {
   setCookie(name, '', -1);
 };
 

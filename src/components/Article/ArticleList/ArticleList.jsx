@@ -70,4 +70,3 @@ class ArticleList extends React.Component {
 }
 
 export default ArticleList;
-// this.form.setFieldsValue({ 'input1': Math.randan() })

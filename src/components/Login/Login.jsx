@@ -25,20 +25,22 @@ class NormalLoginForm extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { userInfo } = this.props;
     return (
       <div className="login-panel">
         <Canvas />
         <span className="s" />
         <Form onSubmit={this.handleSubmit} className="login-form">
           <h1 className="login-text">
-            {
-              '博客后台'
-            }
+            {'博客后台'}
           </h1>
           <FormItem>
             {getFieldDecorator('username', {
-              rules: [{ required: true, message: '请输入用户名!' }],
-            })(<Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="用户名" />)}
+                rules: [{ required: true, message: '请输入用户名!' }],
+              })(<Input
+                prefix={<Icon type="user" style={{ fontSize: 13 }} />}
+                placeholder="用户名"
+              />)}
           </FormItem>
           <FormItem>
             {getFieldDecorator('password', {
@@ -49,11 +51,13 @@ class NormalLoginForm extends React.Component {
               placeholder="密码"
             />)}
           </FormItem>
-
-          <Button type="primary" htmlType="submit" className="login-form-button">
-            {
-              '登 录'
-            }
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+            loading={userInfo.isLoading}
+          >
+            {'登 录'}
           </Button>
         </Form>
       </div>
@@ -64,11 +68,13 @@ class NormalLoginForm extends React.Component {
 
 NormalLoginForm.defaultProps = {
   form: {},
+  userInfo: {},
   onLogin: () => {},
 };
 
 NormalLoginForm.propTypes = {
   form: PropTypes.objectOf(PropTypes.any),
+  userInfo: PropTypes.objectOf(PropTypes.any),
   onLogin: PropTypes.func,
 };
 

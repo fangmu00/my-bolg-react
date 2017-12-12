@@ -66,7 +66,7 @@ class Anim extends React.Component {
     star.items = []; // 圆球对象
     // star.color = this.setColor();
     star.color = '#f2f2f2';
-    star.itemLen = Math.floor((Math.random() * 2) + 3); // 圆球个数
+    star.itemLen = Math.floor((Math.random() * 2) + 4); // 圆球个数
     for (let i = 0; i < star.itemLen; i += 1) {
       star.items.push({
         x: Math.floor(l + (Math.random() * r)), // 圆心x坐标

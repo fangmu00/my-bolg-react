@@ -24,6 +24,33 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+const articleSchema = new mongoose.Schema({
+  name: {
+    type: String,
+  },
+  type: {
+    type: String,
+  },
+  status: {
+    type: String,
+  },
+  createDate: {
+    type: String,
+    default: new Date(),
+  },
+  updateTime: {
+    type: Date,
+    default: new Date(),
+  },
+  content: {
+    type: String,
+  },
+  auther: {
+    type: String,
+  },
+});
+
 module.exports = {
   user: db.model('user', userSchema),
+  article: db.model('article', articleSchema),
 };
