@@ -1,12 +1,13 @@
-import { Input, TimePicker } from 'antd';
-import Select from '../Select/index';
-import DatePicker from '../DatePicker/index';
+import { TimePicker } from 'antd';
+import Select from '../Select';
+import DatePicker from '../DatePicker';
 import MarkdownEdit from './MarkdownEdit';
+import Input from '../Input';
 
 export default {
   Input,
   MarkdownEdit,
   Select,
   TimePicker,
-  DatePicker
-}
+  DatePicker,
+};

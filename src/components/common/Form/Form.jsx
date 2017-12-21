@@ -72,7 +72,6 @@ class Form2 extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
-      console.log('Received values of form: ', values, err);
       if (!err) {
         this.props.onSubmit(values);
       }
@@ -82,9 +81,9 @@ class Form2 extends React.Component {
   handleChange(value, targetId) {
     const values = this.props.form.getFieldsValue();
     values[targetId] = value;
-    console.log(value, targetId, values)
+    // console.log(value, targetId, values)
 
-    this.props.onChange(values, targetId, values);
+    this.props.onChange(value, targetId, values);
   }
 
   getLabelAandPlaceholder(text){

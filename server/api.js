@@ -4,7 +4,7 @@ const db = require('./db');
 const router = express.Router();
 
 const successRet = (res, ret) => {
-  res.status(200).send({
+  res.status(200).jsonp({
     success: true,
     content: ret,
   });
@@ -12,15 +12,15 @@ const successRet = (res, ret) => {
 
 const errorRet = (res, error) => {
   console.error(error);
-  res.status(500).send({
+  res.status(500).jsonp({
     success: false,
     error,
   });
 };
 
 // 登录
-router.post('/user/login', ({ body }, res) => {
-  const { username, password } = body;
+router.get('/user/login', ({ query }, res) => {
+  const { username, password } = query;
   db.user.findOne({ username }, 'password', (err, doc) => {
     switch (true) {
       case !!err:
@@ -33,6 +33,8 @@ router.post('/user/login', ({ body }, res) => {
         });
         break;
       case doc.password === password:
+        res.cookie('userId', doc._id);
+        res.cookie('user', username);
         successRet(res, {
           isSuccess: true,
           message: '登陆成功',
@@ -94,48 +96,61 @@ router.post('/user/register', ({ body }, res) => {
   });
 });
 
-// router.get('/user/queryUser', (req, res) => {
-//   db.user.find({}, (error, doc) => {
-//     if (error) {
-//       console.log(error);
-//       successRet(res, {
-//         isSuccess: false,
-//         message: '查询失败',
-//       });
-//     } else {
-//       successRet(res, {
-//         isSuccess: true,
-//         message: '操作成功',
-//         retValue: doc,
-//       });
-//     }
-//   });
-// });
-
-// 新增编辑文章
-router.post('/article/manageArticle', ({ body }, res) => {
-  const {
-    name, type, operationCode, content, auther,
-  } = body;
-  db.article.create({
-    name,
-    type,
-    content,
-    auther,
-    status: operationCode === 'add' ? 'released' : 'saved',
-  }, (error) => {
+router.get('/user/queryUser', (req, res) => {
+  db.user.find({}, (error, doc) => {
     if (error) {
-      res.send(successRet({
+      console.log(error);
+      successRet(res, {
         isSuccess: false,
-        message: '操作失败',
-      }));
+        message: '查询失败',
+      });
     } else {
-      res.send(successRet({
+      successRet(res, {
         isSuccess: true,
         message: '操作成功',
-      }));
+        retValue: doc,
+      });
     }
   });
+});
+
+// 新增编辑文章
+router.get('/article/manageArticle', ({ query, cookies }, res) => {
+  const {
+    name, type, operationCode, content,
+  } = query;
+  const {
+    userId,
+  } = cookies;
+  if (!userId) {
+    successRet(res, {
+      isSuccess: false,
+      message: '请先登录',
+    });
+  } else {
+    db.article.create({
+      name,
+      type,
+      content,
+      autherId: userId,
+      status: operationCode === 'add' ? 'released' : 'saved',
+    }, (error, doc) => {
+      if (error) {
+        successRet(res, {
+          isSuccess: false,
+          message: '操作失败',
+        });
+      } else {
+        successRet(res, {
+          isSuccess: true,
+          retValue: {
+            id: doc._id,
+          },
+          message: '操作成功',
+        });
+      }
+    });
+  }
 });
 
 router.get('/article/queryArticle', ({ query }, res) => {
