@@ -6,7 +6,8 @@ class MarkdownEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.props.value,
+      // value: this.props.value,
+      value: '',
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -63,13 +64,13 @@ MarkdownEdit.defaultProps = {
     highlight: code => window.hljs.highlightAuto(code).value,
   },
   placeholder: '',
-  value: '# Marked in browser\n\nRendered by **marked**.',
+  // value: '# Marked in browser\n\nRendered by **marked**.',
   onChange: () => {},
 };
 
 MarkdownEdit.propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.string,
+  // value: PropTypes.string,
   placeholder: PropTypes.string,
   option: PropTypes.objectOf(PropTypes.any),
 };

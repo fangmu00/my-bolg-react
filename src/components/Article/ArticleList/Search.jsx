@@ -1,52 +1,52 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Form from '../../common/Form/index';
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      formData: null,
       formConfig: {
         fields: [
-          ['Name', 'Type', 'Date', 'Status'],
-          ['SUBMIT']
+          ['name', 'type', 'date', 'status'],
+          ['SUBMIT'],
         ],
         labels: {
-          Name: '标题[请输入]',
-          Type: '分类[请选择]',
-          Date: '日期[请选择]',
-          Status: '状态[请选择]',
-          SUBMIT: '查询'
+          name: '标题[请输入]',
+          type: '分类[请选择]',
+          date: '更新日期[请选择]',
+          status: '状态[请选择]',
+          SUBMIT: '查询',
         },
         types: {
-          Name: 'Input',
-          Type: 'Select',
-          Date: 'DatePicker',
-          Status: 'Select'
+          name: 'Input',
+          type: 'Select',
+          date: 'DatePicker',
+          status: 'Select',
         },
         props: {
-          Date: {
+          date: {
             type: 'Range',
-            placeholder: ['开始时间', '结束时间']
+            placeholder: ['开始时间', '结束时间'],
           },
-          Type: {
-            allowClear: true
+          type: {
+            allowClear: true,
           },
-          Status: {
-            allowClear: true
-          }
+          status: {
+            allowClear: true,
+          },
         },
         options: {
-          Type: {
-            js: 'js',
-            css: 'css'
+          type: {
+            JS: 'JS',
+            CSS: 'CSS',
           },
-          Status: {
+          status: {
             released: '已发布',
-            draft: '草稿'
-          }
-        }
-      }
+            saved: '草稿',
+          },
+        },
+      },
     };
   }
 
@@ -54,13 +54,21 @@ class Search extends React.Component {
     const { formConfig } = this.state;
     return (
       <Form
-        config={ formConfig }
-        onSubmit= {(data) => {
-          console.log(data)
+        config={formConfig}
+        onSubmit={(data) => {
+          console.log(data);
+          this.props.onSubmit(data);
         }}
       />
-    )
+    );
   }
 }
 
-export default Search
+Search.defualtProps = {
+  onSubmit: () => {},
+};
+
+Search.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
+export default Search;

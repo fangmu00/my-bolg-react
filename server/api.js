@@ -155,23 +155,67 @@ router.get('/article/manageArticle', ({ query, cookies }, res) => {
 
 router.get('/article/queryArticle', ({ query }, res) => {
   const {
-    name, type, updateDateRange, status,
+    queryVo = '{}', current, pageSize,
   } = query;
-  db.article.find({}, (error, doc) => {
-    if (error) {
-      console.log(error);
-      successRet(res, {
-        isSuccess: false,
-        message: '查询失败',
+  const {
+    name, type, updateDateRange = [], status,
+  } = JSON.parse(queryVo);
+  const reg = new RegExp(name || '', 'i');
+  const q = { name: { $regex: reg } };
+  if (type) {
+    q.type = type;
+  }
+  if (status) {
+    q.status = status;
+  }
+  if (updateDateRange.length) {
+    db.article
+      .find(q)
+      .where('updateTime').gt(updateDateRange[0]).lt(updateDateRange[1])
+      .then((doc) => {
+        const total = doc.length;
+        const d = doc.splice((current - 1) * pageSize, current * pageSize);
+        successRet(res, {
+          isSuccess: true,
+          message: '操作成功',
+          retValue: {
+            data: d,
+            current: Number(current),
+            pageSize: Number(pageSize),
+            total,
+          },
+        });
+      })
+      .catch(() => {
+        successRet(res, {
+          isSuccess: false,
+          message: '查询失败',
+        });
       });
-    } else {
-      successRet(res, {
-        isSuccess: true,
-        message: '操作成功',
-        retValue: doc,
+  } else {
+    db.article
+      .find(q)
+      .then((doc) => {
+        const total = doc.length;
+        const d = doc.splice((current - 1) * pageSize, current * pageSize);
+        successRet(res, {
+          isSuccess: true,
+          message: '操作成功',
+          retValue: {
+            data: d,
+            current: Number(current),
+            pageSize: Number(pageSize),
+            total,
+          },
+        });
+      })
+      .catch(() => {
+        successRet(res, {
+          isSuccess: false,
+          message: '查询失败',
+        });
       });
-    }
-  });
+  }
 });
 
 module.exports = router;

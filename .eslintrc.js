@@ -5,5 +5,6 @@ module.exports = {
       "jsx-a11y/no-static-element-interactions": 0,
       "no-underscore-dangle": 0,
       "no-undef": 0,
+      'react/prop-types': 1,
     }
 };

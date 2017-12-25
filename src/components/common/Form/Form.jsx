@@ -81,8 +81,6 @@ class Form2 extends React.Component {
   handleChange(value, targetId) {
     const values = this.props.form.getFieldsValue();
     values[targetId] = value;
-    // console.log(value, targetId, values)
-
     this.props.onChange(value, targetId, values);
   }
 
@@ -148,7 +146,7 @@ class Form2 extends React.Component {
               <Col span={span} key={key}>
                 <FormItem {...formItemLayout} label={labelObj.label} hasFeedback>
                   {getFieldDecorator(inItem, {
-                    rules: [{ required: required, message: '该项必填!' }],
+                    rules: [{ required, message: '该项必填!' }],
                     onChange: (value) => { this.handleChange(value, inItem) }
                   })(
                     <Copt placeholder={placeholder ? placeholder : ''} {...itemOption} {...props[inItem]} />

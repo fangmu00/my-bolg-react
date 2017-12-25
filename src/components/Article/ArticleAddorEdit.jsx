@@ -51,14 +51,14 @@ class ArticleAddorEdit extends React.Component {
 
   getData(validate = false) {
     if (validate) {
-      this.form.validateFields((err) => {
+      this.formRef.props.form.validateFields((err) => {
         if (!err) {
-          return this.form.getFieldsValue();
+          return this.formRef.props.form.getFieldsValue();
         }
         return null;
       });
     }
-    return this.form.getFieldsValue();
+    return this.formRef.props.form.getFieldsValue();
   }
 
   initConfig() {
@@ -76,7 +76,7 @@ class ArticleAddorEdit extends React.Component {
     const data = this.getData(true);
     if (data) {
       data.operationCode = 'add';
-      this.props.onArticleAddorEdit(data);
+      this.props.onArticleAddorEdit(data, this.props.history);
     }
   }
 
@@ -92,18 +92,25 @@ class ArticleAddorEdit extends React.Component {
         <BreadNav config={this.BreadNav} />
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <Form
+            // data={{
+            //   content: '# Marked in browser\n\nRendered by **marked**.',
+            //   type: 'JS',
+            // }}
             config={this.state.config}
             onChange={(value, attrName) => {
               console.log(value, attrName);
             }}
-            ref={(c) => {
-              this.form = c;
-            }}
+            wrappedComponentRef={(inst) => { console.log(inst); this.formRef = inst; }}
           />
           <div className="btn-father text-left">
             <Button type="primary" onClick={this.sumbit}>提交</Button>
             <Button onClick={this.save}>暂存</Button>
-            <Button>返回</Button>
+            <Button onClick={() => {
+                this.props.history.goBack();
+              }}
+            >
+            返回
+            </Button>
           </div>
         </div>
 
@@ -121,7 +128,7 @@ ArticleAddorEdit.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onArticleAddorEdit: values => dispatch(articleAddorEdit(values)),
+  onArticleAddorEdit: (values, history) => dispatch(articleAddorEdit(values, history)),
 });
 
 const mapStateToProps = ({ article }) => ({

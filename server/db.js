@@ -36,16 +36,16 @@ const articleSchema = new mongoose.Schema({
   },
   createDate: {
     type: String,
-    default: new Date(),
+    default: new Date().getTime(),
   },
   updateTime: {
     type: Date,
-    default: new Date(),
+    default: new Date().getTime(),
   },
   content: {
     type: String,
   },
-  auther: {
+  autherId: {
     type: String,
   },
 });
