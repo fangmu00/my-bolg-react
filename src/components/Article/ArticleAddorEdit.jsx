@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { connect } from 'react-redux';
 import Form from '../common/Form/index';
 import BreadNav from '../common/BreadNav';
@@ -12,11 +12,13 @@ class ArticleAddorEdit extends React.Component {
     const { params } = match;
     this.getArticle(params);
     this.initConfig();
+    this.articleId = params.articleId;
   }
 
   componentWillReceiveProps(nextProps) {
     const { match } = nextProps;
     const { params } = match;
+    this.articleId = params.articleId;
     if (params.articleId !== this.props.match.params.articleId) {
       this.getArticle(params);
     }
@@ -82,12 +84,12 @@ class ArticleAddorEdit extends React.Component {
   }
 
   sumbit() {
-    const { article } = this.props;
-    const { id } = article;
+    // const { article } = this.props;
+    // const { id } = article;
     const data = this.getData(true);
     if (data) {
-      if (id) {
-        data.id = id;
+      if (this.articleId) {
+        data.id = this.articleId;
       }
       data.operationCode = 'add';
       this.props.onArticleAddorEdit(data, this.props.history);
@@ -95,14 +97,18 @@ class ArticleAddorEdit extends React.Component {
   }
 
   save() {
-    const { article } = this.props;
-    const { id } = article;
+    // const { article } = this.props;
+    // const { id } = article;
     const data = this.getData(false);
-    if (id) {
-      data.id = id;
+    if (data.name === undefined) {
+      message.error('标题不能为空');
+    } else {
+      if (this.articleId) {
+        data.id = this.articleId;
+      }
+      data.operationCode = 'save';
+      this.props.onArticleAddorEdit(data);
     }
-    data.operationCode = 'save';
-    this.props.onArticleAddorEdit(data);
   }
 
   render() {
@@ -120,7 +126,7 @@ class ArticleAddorEdit extends React.Component {
         />
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <Form
-            data={article}
+            data={this.articleId ? article : null}
             config={this.state.config}
             onChange={(value, attrName) => {
               console.log(value, attrName);

@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const db = require('./db');
 
 const router = express.Router();
@@ -23,7 +22,8 @@ const upsert = (model, data, f) => {
   if (!data._id) {
     model.create(data, f);
   } else {
-    const { _id: id, ...other } = data;
+    const { _id: id } = data;
+    delete data._id;
     model.findOneAndUpdate({ _id: id }, other, f);
   }
 };
