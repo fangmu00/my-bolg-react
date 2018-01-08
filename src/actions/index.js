@@ -5,6 +5,8 @@ Fetch.set({
   login: 'user/login',
   manageArticle: 'article/manageArticle',
   queryArticle: 'article/queryArticle',
+  removeArticle: 'article/removeArticle',
+  getArticleDetail: 'article/getArticleDetail',
 });
 
 export const login = params => (dispatch) => {
@@ -35,7 +37,7 @@ export const articleAddorEdit = (params, history) => (dispatch) => {
   });
 };
 
-export const articleQuery = (params, isFirst) => (dispatch) => {
+export const articleQuery = (params = { current: 1, pageSize: 10 }, isFirst = false) => (dispatch) => {
   dispatch({ type: 'ARTICLE_QUERY_LOADING' });
   Fetch.jsonp('queryArticle', params).then((content) => {
     if (content.isSuccess) {
@@ -54,15 +56,17 @@ export const creator = ({ type, payload = '' }) => ({
   payload,
 });
 
-export const creatorAsync = ({ type, params }) => (dispatch) => {
-  dispatch({ type: 'GLOBAL_LOADING' });
-  Fetch.jsonp('queryArticle', params).then((content) => {
+export const creatorAsync = ({ type, ...other }) => (dispatch) => {
+  const hide = message.loading('加载中..', 0);
+  return Fetch.jsonp(other.name, other.params).then((content) => {
+    hide();
     if (content.isSuccess) {
-      message.success(content.message);
-      dispatch({ type: `${type}_SUCCESS`, payload: { content: content.retValue } });
-    } else {
-      dispatch({ type: `${type}_FAILED` });
+      // message.success(content.message);
+      dispatch({ type: `${type}_SUCCESS`, payload: content.retValue });
+      return content;
     }
+    dispatch({ type: `${type}_FAILED` });
+    return false;
   });
 };
 const actions = [];

@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const db = require('./db');
 
 const router = express.Router();
@@ -18,6 +19,15 @@ const errorRet = (res, error) => {
   });
 };
 
+const upsert = (model, data, f) => {
+  if (!data._id) {
+    model.create(data, f);
+  } else {
+    const { _id: id, ...other } = data;
+    model.findOneAndUpdate({ _id: id }, other, f);
+  }
+};
+
 // 登录
 router.get('/user/login', ({ query }, res) => {
   const { username, password } = query;
@@ -33,8 +43,8 @@ router.get('/user/login', ({ query }, res) => {
         });
         break;
       case doc.password === password:
-        res.cookie('userId', doc._id);
-        res.cookie('user', username);
+        res.cookie('userId', doc._id, { maxAge: 900000, httpOnly: true });
+        res.cookie('user', username, { maxAge: 900000, httpOnly: true });
         successRet(res, {
           isSuccess: true,
           message: '登陆成功',
@@ -96,6 +106,26 @@ router.post('/user/register', ({ body }, res) => {
   });
 });
 
+// 注册
+router.get('/user/cearteAdmin', (req, res) => {
+  db.user.create({
+    username: 'admin',
+    password: '123456',
+  }, (error) => {
+    if (error) {
+      successRet(res, {
+        isSuccess: false,
+        message: '注册失败',
+      });
+    } else {
+      successRet(res, {
+        isSuccess: true,
+        message: '注册成功',
+      });
+    }
+  });
+});
+
 router.get('/user/queryUser', (req, res) => {
   db.user.find({}, (error, doc) => {
     if (error) {
@@ -117,7 +147,7 @@ router.get('/user/queryUser', (req, res) => {
 // 新增编辑文章
 router.get('/article/manageArticle', ({ query, cookies }, res) => {
   const {
-    name, type, operationCode, content,
+    name, type, operationCode, content, id,
   } = query;
   const {
     userId,
@@ -128,13 +158,17 @@ router.get('/article/manageArticle', ({ query, cookies }, res) => {
       message: '请先登录',
     });
   } else {
-    db.article.create({
+    const updateData = {
+      _id: id,
       name,
       type,
+      operationCode,
       content,
-      autherId: userId,
+      updateTime: new Date().getTime(),
       status: operationCode === 'add' ? 'released' : 'saved',
-    }, (error, doc) => {
+      autherId: userId,
+    };
+    upsert(db.article, updateData, (error, doc) => {
       if (error) {
         successRet(res, {
           isSuccess: false,
@@ -146,6 +180,72 @@ router.get('/article/manageArticle', ({ query, cookies }, res) => {
           retValue: {
             id: doc._id,
           },
+          message: '操作成功',
+        });
+      }
+    });
+  }
+});
+
+// 获取文章详情
+router.get('/article/getArticleDetail', ({ query }, res) => {
+  const {
+    id,
+  } = query;
+  if (!id) {
+    successRet(res, {
+      isSuccess: false,
+      message: '参数错误',
+    });
+  } else {
+    db.article.findOne({ _id: id }, null, (err, doc) => {
+      if (err) {
+        successRet(res, {
+          isSuccess: false,
+          message: '操作失败',
+        });
+      } else {
+        const {
+          _id,
+          content,
+          type,
+          name,
+        } = doc;
+        successRet(res, {
+          isSuccess: true,
+          retValue: {
+            id: _id,
+            content,
+            type,
+            name,
+          },
+          message: '操作成功',
+        });
+      }
+    });
+  }
+});
+
+// 删除文章
+router.get('/article/removeArticle', ({ query }, res) => {
+  const {
+    id,
+  } = query;
+  if (!id) {
+    successRet(res, {
+      isSuccess: false,
+      message: '参数错误',
+    });
+  } else {
+    db.article.remove({ _id: id }, (err) => {
+      if (err) {
+        successRet(res, {
+          isSuccess: false,
+          message: '操作失败',
+        });
+      } else {
+        successRet(res, {
+          isSuccess: true,
           message: '操作成功',
         });
       }
@@ -172,6 +272,7 @@ router.get('/article/queryArticle', ({ query }, res) => {
     db.article
       .find(q)
       .where('updateTime').gt(updateDateRange[0]).lt(updateDateRange[1])
+      .sort({ updateTime: 'desc' })
       .then((doc) => {
         const total = doc.length;
         const d = doc.splice((current - 1) * pageSize, current * pageSize);
@@ -195,6 +296,7 @@ router.get('/article/queryArticle', ({ query }, res) => {
   } else {
     db.article
       .find(q)
+      .sort({ updateTime: 'desc' })
       .then((doc) => {
         const total = doc.length;
         const d = doc.splice((current - 1) * pageSize, current * pageSize);

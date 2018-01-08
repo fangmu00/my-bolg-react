@@ -35,11 +35,11 @@ const articleSchema = new mongoose.Schema({
     type: String,
   },
   createDate: {
-    type: String,
+    type: Number,
     default: new Date().getTime(),
   },
   updateTime: {
-    type: Date,
+    type: Number,
     default: new Date().getTime(),
   },
   content: {

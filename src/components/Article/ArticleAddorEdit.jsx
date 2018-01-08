@@ -3,11 +3,44 @@ import { Button } from 'antd';
 import { connect } from 'react-redux';
 import Form from '../common/Form/index';
 import BreadNav from '../common/BreadNav';
-import { articleAddorEdit } from '../../actions';
+import { articleAddorEdit, creatorAsync } from '../../actions';
 
 class ArticleAddorEdit extends React.Component {
   constructor(props) {
     super(props);
+    const { match } = props;
+    const { params } = match;
+    this.getArticle(params);
+    this.initConfig();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { match } = nextProps;
+    const { params } = match;
+    if (params.articleId !== this.props.match.params.articleId) {
+      this.getArticle(params);
+    }
+  }
+
+  getData(validate = false) {
+    let hasError = false;
+    if (validate) {
+      this.formRef.props.form.validateFields((err) => {
+        if (err) {
+          hasError = true;
+        }
+      });
+    }
+    return hasError ? null : this.formRef.props.form.getFieldsValue();
+  }
+
+  getArticle({ articleId }) {
+    if (articleId) {
+      this.props.getArticleDetail(articleId);
+    }
+  }
+
+  initConfig() {
     this.state = {
       config: {
         fields: [
@@ -44,63 +77,55 @@ class ArticleAddorEdit extends React.Component {
         },
       },
     };
-    this.initConfig();
     this.sumbit = this.sumbit.bind(this);
     this.save = this.save.bind(this);
   }
 
-  getData(validate = false) {
-    if (validate) {
-      this.formRef.props.form.validateFields((err) => {
-        if (!err) {
-          return this.formRef.props.form.getFieldsValue();
-        }
-        return null;
-      });
-    }
-    return this.formRef.props.form.getFieldsValue();
-  }
-
-  initConfig() {
-    this.BreadNav = [
-      {
-        title: '文章管理',
-      },
-      {
-        title: '新增文章',
-      },
-    ];
-  }
-
   sumbit() {
+    const { article } = this.props;
+    const { id } = article;
     const data = this.getData(true);
     if (data) {
+      if (id) {
+        data.id = id;
+      }
       data.operationCode = 'add';
       this.props.onArticleAddorEdit(data, this.props.history);
     }
   }
 
   save() {
-    const data = this.getData();
+    const { article } = this.props;
+    const { id } = article;
+    const data = this.getData(false);
+    if (id) {
+      data.id = id;
+    }
     data.operationCode = 'save';
     this.props.onArticleAddorEdit(data);
   }
 
   render() {
+    const { article } = this.props;
     return (
       <div>
-        <BreadNav config={this.BreadNav} />
+        <BreadNav config={[
+            {
+              title: '文章管理',
+            },
+            {
+              title: article.id ? '编辑文章' : '新增文章',
+            },
+          ]}
+        />
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <Form
-            // data={{
-            //   content: '# Marked in browser\n\nRendered by **marked**.',
-            //   type: 'JS',
-            // }}
+            data={article}
             config={this.state.config}
             onChange={(value, attrName) => {
               console.log(value, attrName);
             }}
-            wrappedComponentRef={(inst) => { console.log(inst); this.formRef = inst; }}
+            wrappedComponentRef={(inst) => { this.formRef = inst; }}
           />
           <div className="btn-father text-left">
             <Button type="primary" onClick={this.sumbit}>提交</Button>
@@ -129,6 +154,11 @@ ArticleAddorEdit.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   onArticleAddorEdit: (values, history) => dispatch(articleAddorEdit(values, history)),
+  getArticleDetail: id => dispatch(creatorAsync({
+    type: 'GET_ARTICLE',
+    name: 'getArticleDetail',
+    params: { id },
+  })),
 });
 
 const mapStateToProps = ({ article }) => ({

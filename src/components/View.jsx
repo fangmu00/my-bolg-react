@@ -87,7 +87,8 @@ class View extends React.Component {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/ArticleList" component={ArticleList} />
-                <Route path="/ArticleAddorEdit" component={ArticleAddorEdit} />
+                <Route path="/ArticleEdit/:articleId" component={ArticleAddorEdit} />
+                <Route path="/ArticleAdd" component={ArticleAddorEdit} />
               </Switch>
             </Layout>
           </Layout>

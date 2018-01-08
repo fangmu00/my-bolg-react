@@ -32,6 +32,19 @@ const article = (state = {}, action) => {
       return { isLoading: false };
     case 'ARTICLE_EDIT_SUCCESS':
       return { isLoading: false };
+    case 'GET_ARTICLE_SUCCESS':
+    {
+      const {
+        id, type, name, content,
+      } = action.payload;
+      return {
+        state,
+        id,
+        type,
+        name,
+        content,
+      };
+    }
     default:
       return state;
   }

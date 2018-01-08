@@ -6,5 +6,6 @@ module.exports = {
       "no-underscore-dangle": 0,
       "no-undef": 0,
       'react/prop-types': 1,
+      'jsx-a11y/anchor-is-valid': 0
     }
 };

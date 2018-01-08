@@ -2,9 +2,10 @@ import React from 'react';
 import { Table, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { formatDate } from '../../../app/uilts';
 import BreadNav from '../../common/BreadNav';
 import Search from './Search';
-import { articleQuery } from '../../../actions';
+import { articleQuery, creatorAsync } from '../../../actions';
 
 const processData = (data = []) => {
   const back = [];
@@ -13,12 +14,14 @@ const processData = (data = []) => {
       name,
       type,
       updateTime,
+      status,
       _id: key,
     } = item;
     back.push({
       name,
       type,
       updateTime,
+      status,
       key,
     });
   });
@@ -51,6 +54,7 @@ class ArticleList extends React.Component {
     super(props);
     this.initConfig();
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.handleTableChange = this.handleTableChange.bind(this);
   }
 
   componentDidMount() {
@@ -89,6 +93,15 @@ class ArticleList extends React.Component {
     });
   }
 
+  removeArticle(id) {
+    const { current, pageSize, queryVo } = this.props;
+    this.props.removeArticle(id, {
+      queryVo,
+      pageSize,
+      current,
+    });
+  }
+
   render() {
     const {
       data, current, pageSize, total, isLoading,
@@ -103,40 +116,28 @@ class ArticleList extends React.Component {
     }, {
       title: '更新时间',
       dataIndex: 'updateTime',
+      render: text => formatDate(text),
+    }, {
+      title: '状态',
+      dataIndex: 'status',
+      render: text => (text === 'released' ? '已发布' : '暂存'),
     }, {
       title: '操作',
-      render: () => <div><a>编辑</a> <a>删除</a></div>,
+      dataIndex: '_id',
+      render: (text, record) => { console.log(text, record); return (<div><Link to={`/ArticleEdit/${record.key}`}>编辑</Link> <a onClick={() => { this.removeArticle(record.key); }}>删除</a></div>); },
     }];
-    // const data = [{
-    //   key: '1',
-    //   name: '文章1',
-    //   releaseDate: 456461,
-    //   type: 'New York No. 1 Lake Park',
-    // }, {
-    //   key: '2',
-    //   name: '文章2',
-    //   releaseDate: 456461,
-    //   type: 'London No. 1 Lake Park',
-    // }];
 
-    // rowSelection object indicates the need for row selection
-    const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-      },
-    };
     return (
       <div>
         <BreadNav config={this.BreadNav} />
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <Search onSubmit={this.handleFormChange} />
           <div style={{ paddingBottom: '20px' }}>
-            <Link to="/ArticleAddorEdit">
+            <Link to="/ArticleAdd">
               <Button>新增文章</Button>
             </Link>
           </div>
           <Table
-            rowSelection={rowSelection}
             columns={columns}
             dataSource={processData(data)}
             pagination={{ current, pageSize, total }}
@@ -151,6 +152,15 @@ class ArticleList extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   onQuery: (values, isFirst) => dispatch(articleQuery(values, isFirst)),
+  removeArticle: (id, queryVo) => dispatch(creatorAsync({
+    type: 'REMOVE_ARTICLE',
+    name: 'removeArticle',
+    params: { id },
+  })).then((content) => {
+    if (content.isSuccess) {
+      dispatch(articleQuery(queryVo));
+    }
+  }),
 });
 
 const mapStateToProps = ({ articleList }) => ({
