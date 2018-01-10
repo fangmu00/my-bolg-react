@@ -21,6 +21,7 @@ class MarkdownEdit extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
@@ -31,7 +32,7 @@ class MarkdownEdit extends React.Component {
   componentWillReceiveProps({ value }) {
     if (value) {
       const { history } = this.state;
-      history.data[history.data.length - 1] = value;
+      history.data[history.currentIndex] = value;
       this.setState({
         value,
         history,
@@ -54,6 +55,7 @@ class MarkdownEdit extends React.Component {
         history,
       }, this.renderView);
     }
+    this.props.onChange(history.data[history.currentIndex]);
   }
 
   nextHistory() {
@@ -65,6 +67,7 @@ class MarkdownEdit extends React.Component {
         history,
       }, this.renderView);
     }
+    this.props.onChange(history.data[history.currentIndex]);
   }
 
   handleChange(e) {
@@ -82,6 +85,14 @@ class MarkdownEdit extends React.Component {
       selectionStart,
       selectionEnd,
     });
+  }
+
+  handleScroll(e) {
+    const { target } = e;
+    const { scrollTop, scrollHeight, offsetHeight } = target;
+    const viewScrollHeight = this.view.scrollHeight;
+    const viewHeight = this.view.offsetHeight;
+    this.view.scrollTop = (scrollTop / (scrollHeight - offsetHeight)) * (viewScrollHeight - viewHeight);
   }
 
   selectionReplace(text) {
@@ -119,7 +130,6 @@ class MarkdownEdit extends React.Component {
         }
       },
     };
-    console.log(history);
     return (
       <div className="markdown-edit-actionbar" style={{ marginBottom: '10px' }}>
         <Button
@@ -182,13 +192,14 @@ class MarkdownEdit extends React.Component {
             onChange={this.handleChange}
             onClick={this.handleClick}
             onKeyUp={this.handleClick}
+            onScroll={this.handleScroll}
             value={this.state.value}
             autosize={{ minRows: 20, maxRows: 20 }}
             ref={(c) => { this.textareaRef = c; }}
           />
         </Col>
         <Col span={12}>
-          <div className="markdown-edit-view" style={{ height: '190px', overflow: 'auto' }} ref={(c) => { this.view = c; }} />
+          <div className="markdown-edit-view" ref={(c) => { this.view = c; }} />
         </Col>
       </Row>
     );

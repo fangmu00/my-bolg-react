@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Login from './Login';
 import View from './View';
+import ArticleDetail from './Article/ArticleDetail';
 
 class Index extends React.Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class Index extends React.Component {
               (<Login />)
             )}
           />
+          <Route path="/ArticleDetail/:id" component={ArticleDetail} />
           <Route
             path="/"
             render={() => (

@@ -109,7 +109,7 @@ class ArticleList extends React.Component {
     const columns = [{
       title: '名称',
       dataIndex: 'name',
-      render: text => <a>{text}</a>,
+      render: (text, record) => <Link to={`/ArticleDetail/${record.key}`}>{text}</Link>,
     }, {
       title: '类别',
       dataIndex: 'type',

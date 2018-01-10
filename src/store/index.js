@@ -5,7 +5,7 @@ import { getCookie } from '../app/uilts';
 
 const defaultState = {
   userInfo: {
-    username: getCookie('user') || 'admin',
+    username: getCookie('user'),
     password: '',
     isLoading: false,
   },

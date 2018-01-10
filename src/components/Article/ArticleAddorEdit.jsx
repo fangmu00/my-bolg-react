@@ -12,20 +12,26 @@ class ArticleAddorEdit extends React.Component {
     const { params } = match;
     this.getArticle(params);
     this.initConfig();
+    this.articleId = params.articleId;
   }
 
   componentDidMount() {
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.save();
-    }, 10000);
+    }, 20000);
   }
 
   componentWillReceiveProps(nextProps) {
     const { match } = nextProps;
     const { params } = match;
+    this.articleId = params.articleId;
     if (params.articleId !== this.props.match.params.articleId) {
       this.getArticle(params);
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   getData(validate = false) {
@@ -88,12 +94,12 @@ class ArticleAddorEdit extends React.Component {
   }
 
   sumbit() {
-    const { article } = this.props;
-    const { id } = article;
+    // const { article } = this.props;
+    // const { id } = article;
     const data = this.getData(true);
     if (data) {
-      if (id) {
-        data.id = id;
+      if (this.articleId) {
+        data.id = this.articleId;
       }
       data.operationCode = 'add';
       this.props.onArticleAddorEdit(data, this.props.history);
@@ -104,10 +110,12 @@ class ArticleAddorEdit extends React.Component {
     const { article } = this.props;
     const { id } = article;
     const data = this.getData(false);
-    if (id) {
+    if (this.articleId) {
+      data.id = this.articleId;
+    } else if (id) {
       data.id = id;
     }
-    data.operationCode = 'save';
+    data.operationCode = 'saved';
     this.props.onArticleAddorEdit(data);
   }
 
@@ -126,7 +134,7 @@ class ArticleAddorEdit extends React.Component {
         />
         <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
           <Form
-            data={article}
+            data={this.articleId ? article : null}
             config={this.state.config}
             onChange={(value, attrName) => {
               console.log(value, attrName);

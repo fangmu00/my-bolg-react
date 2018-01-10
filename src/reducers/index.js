@@ -31,7 +31,7 @@ const article = (state = {}, action) => {
     case 'ARTICLE_EDIT_FAILED':
       return { isLoading: false };
     case 'ARTICLE_EDIT_SUCCESS':
-      return { isLoading: false };
+      return { id: action.payload.id };
     case 'GET_ARTICLE_SUCCESS':
     {
       const {

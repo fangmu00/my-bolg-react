@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const db = require('./db');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -14,8 +15,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 const router = express.Router();
-
-const db = require('./db.js');
 
 const successRet = (res, ret) => {
   res.status(200).jsonp({
@@ -36,8 +35,9 @@ const upsert = (model, data, f) => {
   if (!data._id) {
     model.create(data, f);
   } else {
-    const { _id: id, ...other } = data;
-    model.findOneAndUpdate({ _id: id }, other, f);
+    const { _id: id } = data;
+    delete data._id;
+    model.findOneAndUpdate({ _id: id }, data, f);
   }
 };
 
@@ -56,8 +56,8 @@ router.get('/user/login', ({ query }, res) => {
         });
         break;
       case doc.password === password:
-        res.cookie('userId', doc._id, { maxAge: 900000, httpOnly: true });
-        res.cookie('user', username, { maxAge: 900000, httpOnly: true });
+        res.cookie('userId', doc._id, { maxAge: 900000 });
+        res.cookie('user', username, { maxAge: 900000 });
         successRet(res, {
           isSuccess: true,
           message: '登陆成功',
