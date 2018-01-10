@@ -14,6 +14,12 @@ class ArticleAddorEdit extends React.Component {
     this.initConfig();
   }
 
+  componentDidMount() {
+    setInterval(() => {
+      this.save();
+    }, 10000);
+  }
+
   componentWillReceiveProps(nextProps) {
     const { match } = nextProps;
     const { params } = match;

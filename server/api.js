@@ -193,7 +193,7 @@ router.get('/article/manageArticle', ({ query, cookies }, res) => {
           retValue: {
             id: doc._id,
           },
-          message: '操作成功',
+          message: operationCode === 'saved' ? '保存成功' : '操作成功',
         });
       }
     });
