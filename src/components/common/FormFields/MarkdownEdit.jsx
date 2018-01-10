@@ -44,6 +44,7 @@ class MarkdownEdit extends React.Component {
     const { history } = this.state;
     history.data.push(value);
     history.currentIndex = history.data.length - 1;
+    this.props.onChange(value);
   }
 
   prevHistory() {
@@ -75,7 +76,6 @@ class MarkdownEdit extends React.Component {
       value: e.target.value,
     }, this.renderView);
     this.setHistory(e.target.value);
-    this.props.onChange(e.target.value);
   }
 
   handleClick(e) {
