@@ -1,6 +1,30 @@
 import React, { PropTypes } from 'react';
 import marked from 'marked';
-import { Input, Row, Col } from 'antd';
+import { Input, Row, Col, Upload, Button, Icon, message } from 'antd';
+
+export const renderButton = () => {
+  const props = {
+    name: 'file',
+    action: '//127.0.0.1:8090/file-upload',
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+  return (
+    <Upload {...props}>
+      <Button>
+        <Icon type="upload" /> Click to Upload
+      </Button>
+    </Upload>
+  );
+};
 
 class MarkdownEdit extends React.Component {
   constructor(props) {
@@ -40,6 +64,9 @@ class MarkdownEdit extends React.Component {
     return (
       <Row gutter={16}>
         <Col span={12}>
+          {
+            renderButton()
+          }
           <Input
             type="textarea"
             placeholder={this.props.placeholder}

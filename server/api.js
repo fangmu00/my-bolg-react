@@ -1,8 +1,21 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const db = require('./db');
+const multer = require('multer');
+const path = require('path');
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.resolve(__dirname, './uploads'));
+  },
+  filename: (req, file, cb) => {
+    const mimetype = ['image/jpeg'];
+    const type = ['jpg'];
+    cb(null, `${Date.now()}.${type[file.mimetype.indexOf(mimetype)]}`);
+  },
+});
+const upload = multer({ storage });
 const router = express.Router();
+
+const db = require('./db.js');
 
 const successRet = (res, ret) => {
   res.status(200).jsonp({
@@ -318,6 +331,14 @@ router.get('/article/queryArticle', ({ query }, res) => {
         });
       });
   }
+});
+
+router.post('/file-upload', upload.single('file'), (req, res) => {
+  successRet(res, {
+    isSuccess: true,
+    retValue: req.file,
+    message: '操作成功',
+  });
 });
 
 module.exports = router;
