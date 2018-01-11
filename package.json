@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --env=dev --history-api-fallback --open",
-    "build": "set NODE_ENV=development&&webpack --env=prod --progress --profile --colors --optimize-minimize"
+    "build": "webpack --env=prod --progress --profile --colors --optimize-minimize"
   },
   "repository": {
     "type": "git",

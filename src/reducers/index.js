@@ -12,8 +12,8 @@ const userInfo = (state = {}, action) => {
     case 'LOGIN_SUCCESS':
       return { isLoading: false, ...action.payload };
     case 'LOGIN_OUT':
-      clearCookie('user');
-      clearCookie('userId');
+      clearCookie('name');
+      clearCookie('blogToken');
       message.success('登出成功');
       return {
         username: '',
@@ -35,14 +35,14 @@ const article = (state = {}, action) => {
     case 'GET_ARTICLE_SUCCESS':
     {
       const {
-        id, type, name, content,
+        id, type, name, content, updateTime,
       } = action.payload;
       return {
-        state,
         id,
         type,
         name,
         content,
+        updateTime,
       };
     }
     default:

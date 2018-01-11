@@ -12,21 +12,21 @@ class MarkdownEdit extends React.Component {
     this.state = {
       // value: this.props.value,
       value: '',
-      selectionStart: 0,
-      selectionEnd: 0,
       history: {
         data: [''],
         currentIndex: 0,
       }, // 记录操作记录
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
     marked.setOptions(this.props.option);
     this.view.innerHTML = marked(this.state.value);
+    this.textareaRef.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillReceiveProps({ value }) {
@@ -40,6 +40,10 @@ class MarkdownEdit extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.textareaRef.removeEventListener('keydown', this.handleKeyDown);
+  }
+
   setHistory(value) {
     const { history } = this.state;
     history.data.push(value);
@@ -49,7 +53,7 @@ class MarkdownEdit extends React.Component {
 
   prevHistory() {
     const { history } = this.state;
-    if (history.currentIndex >= 0) {
+    if (history.currentIndex > 0) {
       history.currentIndex -= 1;
       this.setState({
         value: history.data[history.currentIndex],
@@ -78,13 +82,15 @@ class MarkdownEdit extends React.Component {
     this.setHistory(e.target.value);
   }
 
-  handleClick(e) {
-    const textarea = e.target;
-    const { selectionStart, selectionEnd } = textarea;
-    this.setState({
-      selectionStart,
-      selectionEnd,
-    });
+  handleKeyDown(e) {
+    const { keyCode, ctrlKey } = e;
+    if (keyCode === 90 && ctrlKey) {
+      e.preventDefault();
+      this.prevHistory();
+    } else if (keyCode === 9) {
+      e.preventDefault();
+      this.selectionReplace(cmd.tab);
+    }
   }
 
   handleScroll(e) {
@@ -96,14 +102,19 @@ class MarkdownEdit extends React.Component {
   }
 
   selectionReplace(text) {
-    const { value, selectionStart, selectionEnd } = this.state;
+    const { value } = this.state;
+    const { selectionStart, selectionEnd } = this.textareaRef;
     const v = value || '';
     const textBefore = v.substring(0, selectionStart);
     const textAfter = v.substring(selectionEnd, value.length);
     const backValue = `${textBefore}${text}${textAfter}`;
     this.setState({
       value: backValue,
-    }, this.renderView);
+    }, () => {
+      this.renderView();
+      this.textareaRef.focus();
+      this.textareaRef.setSelectionRange(selectionStart + text.length, selectionStart + text.length); // 设置光标位置
+    });
     this.setHistory(backValue);
   }
 
@@ -148,7 +159,8 @@ class MarkdownEdit extends React.Component {
         </Button>
         <Button
           onClick={() => {
-            const { value, selectionStart, selectionEnd } = this.state;
+            const { value } = this.state;
+            const { selectionStart, selectionEnd } = this.textareaRef;
             this.selectionReplace(cmd.link(value.substring(selectionStart, selectionEnd)));
           }}
         >
@@ -190,12 +202,10 @@ class MarkdownEdit extends React.Component {
             type="textarea"
             placeholder={this.props.placeholder}
             onChange={this.handleChange}
-            onClick={this.handleClick}
-            onKeyUp={this.handleClick}
             onScroll={this.handleScroll}
             value={this.state.value}
             autosize={{ minRows: 20, maxRows: 20 }}
-            ref={(c) => { this.textareaRef = c; }}
+            ref={(c) => { if (c) { this.textareaRef = c.refs.input.textAreaRef; } }}
           />
         </Col>
         <Col span={12}>
@@ -211,7 +221,7 @@ MarkdownEdit.defaultProps = {
     gfm: true,
     breaks: true,
     smartypants: true,
-    highlight: code => window.hljs.highlightAuto(code).value,
+    // highlight: code => window.hljs.highlightAuto(code).value,
   },
   placeholder: '',
   // value: '# Marked in browser\n\nRendered by **marked**.',

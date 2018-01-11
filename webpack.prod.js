@@ -59,5 +59,8 @@ module.exports = {
       title: '博客系统后台',
       template: 'template/index.hbs',
     }), // html模板
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
   ],
 };

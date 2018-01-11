@@ -16,11 +16,12 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   createDate: {
-    type: String,
-    default: new Date(),
+    type: Number,
+    default: new Date().getTime(),
   },
   lastLoginDate: {
-    type: Date,
+    type: Number,
+    default: new Date().getTime(),
   },
 });
 

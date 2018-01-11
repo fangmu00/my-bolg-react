@@ -124,7 +124,7 @@ class ArticleList extends React.Component {
     }, {
       title: '操作',
       dataIndex: '_id',
-      render: (text, record) => { console.log(text, record); return (<div><Link to={`/ArticleEdit/${record.key}`}>编辑</Link> <a onClick={() => { this.removeArticle(record.key); }}>删除</a></div>); },
+      render: (text, record) => (<div><Link to={`/ArticleEdit/${record.key}`}>编辑</Link> <a onClick={() => { this.removeArticle(record.key); }}>删除</a></div>),
     }];
 
     return (

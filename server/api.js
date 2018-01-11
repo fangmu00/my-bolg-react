@@ -2,12 +2,14 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const db = require('./db');
+const token = require('./token');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.resolve(__dirname, './uploads'));
   },
   filename: (req, file, cb) => {
+    console.log(file.mimetype);
     const mimetype = ['image/jpeg'];
     const type = ['jpg'];
     cb(null, `${Date.now()}.${type[file.mimetype.indexOf(mimetype)]}`);
@@ -41,6 +43,37 @@ const upsert = (model, data, f) => {
   }
 };
 
+
+const easyRequest = (url, fn) => {
+  router.get(url, (...arg) => {
+    const params = arg[0].query;
+    fn(params, ...arg);
+  });
+  router.post(url, (...arg) => {
+    const params = arg[0].body;
+    fn(params, ...arg);
+  });
+};
+
+// router.use('/*.json', (req, res, next) => {
+//   if (req.path.indexOf('/user/login') === -1 && req.path.indexOf('/article/getArticleDetail') === -1 && req.path.indexOf('/file-upload') === -1) {
+//     const {
+//       blogToken,
+//     } = req.cookies;
+//     if (token.checkToken(blogToken)) {
+//       next();
+//     } else {
+//       successRet(res, {
+//         isSuccess: false,
+//         message: '请重新登录',
+//         errorCode: -1,
+//       });
+//     }
+//   } else {
+//     next();
+//   }
+// });
+
 // 登录
 router.get('/user/login', ({ query }, res) => {
   const { username, password } = query;
@@ -56,13 +89,21 @@ router.get('/user/login', ({ query }, res) => {
         });
         break;
       case doc.password === password:
-        res.cookie('userId', doc._id, { maxAge: 900000 });
-        res.cookie('user', username, { maxAge: 900000 });
+      {
+        const t = token.createToken({
+          iss: 'sunguo',
+          name: doc.username,
+          id: doc._id,
+        }, 15 * 60);
+        res.cookie('blogToken', t, { maxAge: 900000 });
+        res.cookie('name', username, { maxAge: 900000 });
         successRet(res, {
           isSuccess: true,
           message: '登陆成功',
         });
         break;
+      }
+
       case doc.password !== password:
         successRet(res, {
           isSuccess: false,
@@ -163,41 +204,36 @@ router.get('/article/manageArticle', ({ query, cookies }, res) => {
     name, type, operationCode, content, id,
   } = query;
   const {
-    userId,
+    blogToken,
   } = cookies;
-  if (!userId) {
-    successRet(res, {
-      isSuccess: false,
-      message: '请先登录',
-    });
-  } else {
-    const updateData = {
-      _id: id,
-      name,
-      type,
-      operationCode,
-      content,
-      updateTime: new Date().getTime(),
-      status: operationCode === 'add' ? 'released' : 'saved',
-      autherId: userId,
-    };
-    upsert(db.article, updateData, (error, doc) => {
-      if (error) {
-        successRet(res, {
-          isSuccess: false,
-          message: '操作失败',
-        });
-      } else {
-        successRet(res, {
-          isSuccess: true,
-          retValue: {
-            id: doc._id,
-          },
-          message: operationCode === 'saved' ? '保存成功' : '操作成功',
-        });
-      }
-    });
-  }
+  const _token = token.decodeToken(blogToken);
+
+  const updateData = {
+    _id: id,
+    name,
+    type,
+    operationCode,
+    content,
+    updateTime: new Date().getTime(),
+    status: operationCode === 'add' ? 'released' : 'saved',
+    autherId: _token.payload.id,
+  };
+  upsert(db.article, updateData, (error, doc) => {
+    if (error) {
+      successRet(res, {
+        isSuccess: false,
+        message: '操作失败',
+      });
+    } else {
+      successRet(res, {
+        isSuccess: true,
+        retValue: {
+          id: doc._id,
+        },
+        message: operationCode === 'saved' ? '保存成功' : '操作成功',
+      });
+    }
+  });
 });
 
 // 获取文章详情
@@ -223,6 +259,7 @@ router.get('/article/getArticleDetail', ({ query }, res) => {
           content,
           type,
           name,
+          updateTime,
         } = doc;
         successRet(res, {
           isSuccess: true,
@@ -231,6 +268,7 @@ router.get('/article/getArticleDetail', ({ query }, res) => {
             content,
             type,
             name,
+            updateTime,
           },
           message: '操作成功',
         });

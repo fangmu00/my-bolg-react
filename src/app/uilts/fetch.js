@@ -22,6 +22,9 @@ const request = (method, key, params = {}, { showError = true }) => {
   return context.api[key](params).then((content) => {
     if (showError && content.isSuccess === false) {
       message.error(content.message);
+      if (content.errorCode && content.errorCode === -1) { // 未登录
+        window.location.href = '/Login';
+      }
     }
     return content;
   }).catch((error) => {

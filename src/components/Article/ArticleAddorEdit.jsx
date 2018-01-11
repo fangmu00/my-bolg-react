@@ -1,11 +1,12 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Button } from 'antd';
 import { connect } from 'react-redux';
 import Form from '../common/Form/index';
 import BreadNav from '../common/BreadNav';
 import { articleAddorEdit, creatorAsync } from '../../actions';
 
-class ArticleAddorEdit extends React.Component {
+class ArticleAddorEdit extends Component {
   constructor(props) {
     super(props);
     const { match } = props;
@@ -13,12 +14,14 @@ class ArticleAddorEdit extends React.Component {
     this.getArticle(params);
     this.initConfig();
     this.articleId = params.articleId;
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
     this.timer = setInterval(() => {
       this.save();
     }, 20000);
+    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,6 +35,7 @@ class ArticleAddorEdit extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.timer);
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 
   getData(validate = false) {
@@ -119,6 +123,14 @@ class ArticleAddorEdit extends React.Component {
     this.props.onArticleAddorEdit(data);
   }
 
+  handleKeyDown(e) {
+    const { keyCode, ctrlKey } = e;
+    if (keyCode === 83 && ctrlKey) {
+      e.preventDefault();
+      this.save();
+    }
+  }
+
   render() {
     const { article } = this.props;
     return (
@@ -128,7 +140,7 @@ class ArticleAddorEdit extends React.Component {
               title: '文章管理',
             },
             {
-              title: article.id ? '编辑文章' : '新增文章',
+              title: this.articleId ? '编辑文章' : '新增文章',
             },
           ]}
         />
@@ -160,10 +172,12 @@ class ArticleAddorEdit extends React.Component {
 
 ArticleAddorEdit.defaultProps = {
   onArticleAddorEdit: () => {},
+  getArticleDetail: () => {},
 };
 
 ArticleAddorEdit.propTypes = {
   onArticleAddorEdit: PropTypes.func,
+  getArticleDetail: PropTypes.func,
 };
 
 const mapDispatchToProps = dispatch => ({

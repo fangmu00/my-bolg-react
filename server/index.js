@@ -20,13 +20,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../dist')));
 app.use(api);
 app.get('*', (req, res) => {
-  if (req.originalUrl.indexOf('uploads') !== -1) {
-    const img = fs.readFileSync(resolve(`.${req.originalUrl}`));
-    res.send(img);
-  } else {
-    const html = fs.readFileSync(resolve('../dist/index.html'), 'utf-8');
-    res.send(html);
-  }
+  const html = fs.readFileSync(resolve('../dist/index.html'), 'utf-8');
+  res.send(html);
 });
 
 const server = app.listen(app.get('port'), () => {
