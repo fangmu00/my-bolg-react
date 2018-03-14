@@ -31,7 +31,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
         use: ['babel-loader'],
         exclude: /node_modules/,
       },
@@ -58,6 +58,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.json'],
   },
   devServer: {
+    host: '127.0.0.1',
     hot: true,
     // 开启服务器的模块热替换（HMR）
     contentBase: resolve(__dirname, 'dist'),
@@ -75,10 +76,10 @@ module.exports = {
     // 当模块热替换(HMR)时在浏览器控制台输出对用户更友好的模块名字信息
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks(module) {
-        // 该配置假定你引入的 vendor 存在于 node_modules 目录中
-        return module.context && module.context.indexOf('node_modules') !== -1;
-      },
+      // minChunks(module) {
+      //   // 该配置假定你引入的 vendor 存在于 node_modules 目录中
+      //   return module.context && module.context.indexOf('node_modules') !== -1;
+      // },
     }),
     new HtmlWebpackPlugin({
       title: '博客系统后台',

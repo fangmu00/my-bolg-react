@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { connect } from 'react-redux';
 import Form from '../common/Form/index';
 import BreadNav from '../common/BreadNav';
 import { articleAddorEdit, creatorAsync } from '../../actions';
+
+import './style.less';
 
 class ArticleAddorEdit extends Component {
   constructor(props) {
     super(props);
     const { match } = props;
     const { params } = match;
-    this.getArticle(params);
     this.initConfig();
     this.articleId = params.articleId;
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount() {
-    this.timer = setInterval(() => {
-      this.save();
-    }, 20000);
+    const { match } = this.props;
+    const { params } = match;
     document.addEventListener('keydown', this.handleKeyDown);
+    this.getArticle(params);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -114,6 +115,10 @@ class ArticleAddorEdit extends Component {
     const { article } = this.props;
     const { id } = article;
     const data = this.getData(false);
+    if (data.name === '' || data.name === undefined) {
+      message.error('请先填写文章名称');
+      return false;
+    }
     if (this.articleId) {
       data.id = this.articleId;
     } else if (id) {

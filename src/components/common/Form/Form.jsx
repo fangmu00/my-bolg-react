@@ -185,6 +185,7 @@ export default Form.create({
         }
       })
     }
+    console.log(data);
     return data
   }
 })(Form2);
